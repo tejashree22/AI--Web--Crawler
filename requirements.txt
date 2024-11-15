@@ -1,0 +1,10 @@
+requests
+beautifulsoup4
+selenium
+transformers
+webdriver-manager
+requests
+beautifulsoup4
+selenium
+webdriver-manager
+

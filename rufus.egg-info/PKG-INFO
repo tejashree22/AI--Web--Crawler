@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: rufus
+Version: 1.0
+Summary: Rufus: AI-powered web scraping tool for RAG pipelines.
+Author: Your Name
+Author-email: your_email@example.com
+Requires-Dist: requests
+Requires-Dist: beautifulsoup4
+Requires-Dist: selenium
+Requires-Dist: webdriver-manager

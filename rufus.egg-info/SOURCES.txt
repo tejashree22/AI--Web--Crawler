@@ -1,0 +1,8 @@
+README.md
+setup.py
+rufus.egg-info/PKG-INFO
+rufus.egg-info/SOURCES.txt
+rufus.egg-info/dependency_links.txt
+rufus.egg-info/entry_points.txt
+rufus.egg-info/requires.txt
+rufus.egg-info/top_level.txt
