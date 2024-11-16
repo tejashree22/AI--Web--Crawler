@@ -1,35 +1,31 @@
 class RufusExtractor:
     def extract_relevant_data(self, soup, prompt):
         """
-        Extract FAQ-style questions and answers based on the prompt.
+        Extract FAQs systematically: questions and answers.
         """
-        relevant_content = []
-        questions = []
-        answers = []
+        extracted_data = []
 
-        # Debug: Print all extracted tags
-        print("Extracted Tags and Text:")
-        for tag in soup.find_all(["p", "h2", "h3"]):
-            text = tag.get_text(strip=True)
-            print(f"Tag: {tag.name}, Text: {text}")
+        # Target tags commonly used for FAQs
+        question_tags = ["h4", "strong"]  # Headers or bold text often indicate questions
+        answer_tags = ["p", "ul", "li"]  # Answers are typically in paragraphs or lists
 
-            if not text:
-                continue
+        # Extract and pair questions with their answers
+        questions = soup.find_all(question_tags)
+        for question in questions:
+            question_text = question.get_text(strip=True)
+            answer_elements = question.find_next_siblings(answer_tags)
 
-            # Detect questions
-            if text.endswith("?") or text.lower().startswith(("what", "how", "why", "when", "can", "do", "does")):
-                questions.append(text)
-            else:
-                answers.append(text)
+            # Gather all answer text for the question
+            answer_text = "\n".join(
+                element.get_text(strip=True) for element in answer_elements
+            )
 
-        # Pair questions with potential answers
-        for idx, question in enumerate(questions):
-            try:
-                relevant_content.append({
-                    "question": question,
-                    "answer": answers[idx] if idx < len(answers) else "Answer not found."
+            # Add to the extracted data
+            if question_text and answer_text:
+                extracted_data.append({
+                    "question": question_text,
+                    "answer": answer_text
                 })
-            except IndexError:
-                relevant_content.append({"question": question, "answer": "Answer not found."})
 
-        return relevant_content if relevant_content else ["No FAQs found."]
+        # Return extracted data or a message if none found
+        return extracted_data if extracted_data else [{"question": "No relevant data found.", "answer": ""}]
