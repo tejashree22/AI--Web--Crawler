@@ -1,39 +1,33 @@
-from crawler import RufusCrawler
+from web_crawler import RufusCrawler
 from extractor import RufusExtractor
 from output import RufusDocument
 from user_input import get_user_input
 
-
 def main():
-    # Step 1: Get user input
     url, prompt = get_user_input()
 
-    # Step 2: Crawl the website
     crawler = RufusCrawler()
-    soup, links = crawler.crawl(url, max_depth=1, dynamic=True)
+    extractor = RufusExtractor()
+    document = RufusDocument()
 
+    print(f"Scraping: {url} with prompt: '{prompt}'")
+    soup = crawler.crawl(url, dynamic=True)
     if not soup:
         print("Failed to fetch content. Exiting...")
         return
 
-    # Step 3: Extract relevant data
-    extractor = RufusExtractor()
-    relevant_data = extractor.extract_relevant_data(soup, prompt)
+    with open("fetched_content_debug.html", "w", encoding="utf-8") as file:
+        file.write(str(soup.prettify()))
+    print("Fetched content saved to fetched_content_debug.html for debugging.")
 
-    if not relevant_data or relevant_data == ["No FAQs found."]:
-        print("No FAQs found.")
+    relevant_data = extractor.extract_relevant_data(soup, prompt)
+    if not relevant_data:
+        print("No relevant data found. Exiting...")
         return
 
-    # Step 4: Save the output
-    document = RufusDocument()
-    document.save_to_json({"prompt": prompt, "content": relevant_data})
-
-    # Step 5: Save extracted links (optional)
-    if links:
-        document.save_links_to_json(links)
-
-    print("Process completed successfully!")
-
+    output_data = {"prompt": prompt, "content": relevant_data}
+    document.save_to_json(output_data)
+    print("Data saved to output.json")
 
 if __name__ == "__main__":
     main()
